@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>个人博客</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    
+    :root {
+      --bg-color: #fff;
+      --text-color: #333;
+      --header-bg: #333;
+      --header-text: #fff;
+      --post-bg: #f9f9f9;
+      --border-color: #ddd;
+      --btn-bg: #333;
+      --btn-text: #fff;
+      --hover-color: #555;
+      --shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    .dark {
+      --bg-color: #121212;
+      --text-color: #e0e0e0;
+      --header-bg: #1e1e1e;
+      --header-text: #e0e0e0;
+      --post-bg: #1e1e1e;
+      --border-color: #333;
+      --btn-bg: #444;
+      --btn-text: #e0e0e0;
+      --hover-color: #666;
+      --shadow: 0 2px 4px rgba(0,0,0,0.3);
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      line-height: 1.6;
+      color: var(--text-color);
+      background-color: var(--bg-color);
+    }
+    
+    #header {
+      background-color: var(--header-bg);
+      color: var(--header-text);
+      padding: 20px 0;
+      text-align: center;
+    }
+    
+    .header-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    
+    .site-title {
+      font-size: 28px;
+      margin-bottom: 0;
+    }
+    
+    .site-title a {
+      color: var(--header-text);
+      text-decoration: none;
+    }
+    
+    #main-nav {
+      margin-top: 0;
+    }
+    
+    .menu {
+      list-style: none;
+      display: flex;
+      gap: 20px;
+      align-items: center;
+    }
+    
+    .menu li a {
+      color: var(--header-text);
+      text-decoration: none;
+      font-size: 14px;
+      transition: color 0.3s ease;
+    }
+    
+    .menu li a:hover {
+      color: #ff9800;
+    }
+    
+    .theme-toggle {
+      background: none;
+      border: none;
+      color: var(--header-text);
+      cursor: pointer;
+      font-size: 18px;
+      margin-left: 10px;
+    }
+    
+    #main {
+      width: 100%;
+      margin: 0 auto;
+      padding: 0;
+    }
+    
+    .content-wrap {
+      flex: 1;
+    }
+    
+    .post {
+      background-color: var(--post-bg);
+      padding: 25px;
+      margin-bottom: 20px;
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .post:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    
+    .post-title {
+      font-size: 22px;
+      margin-bottom: 15px;
+    }
+    
+    .post-title a {
+      color: var(--text-color);
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+    
+    .post-title a:hover {
+      color: #ff9800;
+    }
+    
+    .post-meta {
+      font-size: 14px;
+      color: #999;
+      margin-bottom: 15px;
+      display: flex;
+      gap: 15px;
+    }
+    
+    .post-content {
+      margin-bottom: 20px;
+      line-height: 1.8;
+    }
+    
+    .post-more {
+      text-align: right;
+    }
+    
+    .btn {
+      display: inline-block;
+      padding: 8px 20px;
+      background-color: var(--btn-bg);
+      color: var(--btn-text);
+      text-decoration: none;
+      border-radius: 4px;
+      font-size: 14px;
+      transition: background-color 0.3s ease;
+    }
+    
+    .btn:hover {
+      background-color: var(--hover-color);
+    }
+    
+    #sidebar {
+      width: 320px;
+      flex-shrink: 0;
+    }
+    
+    .widget {
+      background-color: var(--post-bg);
+      padding: 20px;
+      margin-bottom: 20px;
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+    }
+    
+    .widget-title {
+      font-size: 18px;
+      margin-bottom: 15px;
+      border-bottom: 2px solid #ff9800;
+      padding-bottom: 8px;
+      color: var(--text-color);
+    }
+    
+    .category-list,
+    .tag-list,
+    .recent-posts-list,
+    .links-list {
+      list-style: none;
+    }
+    
+    .category-list li,
+    .tag-list li,
+    .recent-posts-list li,
+    .links-list li {
+      margin-bottom: 10px;
+    }
+    
+    .category-list li a,
+    .tag-list li a,
+    .recent-posts-list li a,
+    .links-list li a {
+      color: var(--text-color);
+      text-decoration: none;
+      font-size: 14px;
+      transition: color 0.3s ease;
+    }
+    
+    .category-list li a:hover,
+    .tag-list li a:hover,
+    .recent-posts-list li a:hover,
+    .links-list li a:hover {
+      color: #ff9800;
+    }
+    
+    .search-form {
+      display: flex;
+      gap: 5px;
+      max-width: 400px;
+      margin: 0 auto;
+    }
+    
+    .search-input {
+      flex: 1;
+      padding: 12px 16px;
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      font-size: 16px;
+    }
+    
+    .search-btn {
+      padding: 12px 20px;
+      background-color: var(--btn-bg);
+      color: var(--btn-text);
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      font-size: 16px;
+    }
+    
+    .search-btn:hover {
+      background-color: var(--hover-color);
+    }
+    
+    .search-container {
+      max-width: 1200px;
+      margin: 20px auto;
+      padding: 0 20px;
+    }
+    
+    .main-content {
+      display: flex;
+      gap: 30px;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+    
+    .article-section {
+      flex: 7;
+    }
+    
+    .sidebar-section {
+      flex: 3;
+    }
+    
+    /* 自定义滚动条样式 */
+    .article-section::-webkit-scrollbar,
+    .sidebar-section::-webkit-scrollbar {
+      width: 8px;
+    }
+    
+    .article-section::-webkit-scrollbar-track,
+    .sidebar-section::-webkit-scrollbar-track {
+      background: #f1f1f1;
+      border-radius: 4px;
+    }
+    
+    .article-section::-webkit-scrollbar-thumb,
+    .sidebar-section::-webkit-scrollbar-thumb {
+      background: #888;
+      border-radius: 4px;
+    }
+    
+    .article-section::-webkit-scrollbar-thumb:hover,
+    .sidebar-section::-webkit-scrollbar-thumb:hover {
+      background: #555;
+    }
+    
+    .tag-cloud {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    
+    .tag-cloud a {
+      padding: 4px 12px;
+      background-color: #f0f0f0;
+      color: #333;
+      text-decoration: none;
+      border-radius: 15px;
+      font-size: 13px;
+      transition: all 0.3s ease;
+    }
+    
+    .dark .tag-cloud a {
+      background-color: #333;
+      color: #e0e0e0;
+    }
+    
+    .tag-cloud a:hover {
+      background-color: #ff9800;
+      color: #fff;
+    }
+    
+    #footer {
+      background-color: var(--header-bg);
+      color: var(--header-text);
+      text-align: center;
+      padding: 15px 0;
+      margin-top: 20px;
+    }
+    
+    .footer-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+      font-size: 14px;
+    }
+    
+    .footer-links {
+      margin-top: 15px;
+    }
+    
+    .footer-links a {
+      color: var(--header-text);
+      text-decoration: none;
+      margin: 0 10px;
+      transition: color 0.3s ease;
+    }
+    
+    .footer-links a:hover {
+      color: #ff9800;
+    }
+    
+    /* 分页控件样式 */
+    .pagination {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 20px;
+      margin-top: 30px;
+      padding: 20px;
+      background-color: var(--post-bg);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+    }
+    
+    .pagination a {
+      display: inline-block;
+      padding: 8px 16px;
+      background-color: var(--btn-bg);
+      color: var(--btn-text);
+      text-decoration: none;
+      border-radius: 4px;
+      transition: background-color 0.3s ease;
+    }
+    
+    .pagination a:hover {
+      background-color: var(--hover-color);
+    }
+    
+    .pagination .page-number {
+      font-size: 14px;
+      color: var(--text-color);
+    }
+    
+    .pagination .prev:disabled,
+    .pagination .next:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
+    
+    @media (max-width: 768px) {
+      .header-inner {
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+      }
+      
+      .menu {
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+      
+      #main {
+        flex-direction: column;
+      }
+      
+      #sidebar {
+        width: 100%;
+      }
+    }
+  </style>
+<meta name="generator" content="Hexo 6.3.0"></head>
+<body>
+  <header id="header">
+  <div class="header-inner">
+    <h1 class="site-title"><a href="/">法外张三的个人博客</a></h1>
+    <nav id="main-nav">
+      <ul class="menu">
+        
+          <li><a href="/">首页</a></li>
+        
+          <li><a href="/categories">分类</a></li>
+        
+          <li><a href="/tags">标签</a></li>
+        
+        <li><button class="theme-toggle" id="themeToggle">🌙</button></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+  <!-- 搜索栏 -->
+  <div class="search-container">
+    <form class="search-form">
+      <input type="text" class="search-input" placeholder="搜索文章...">
+      <button type="submit" class="search-btn">🔍</button>
+    </form>
+  </div>
+
+  <main id="main">
+    <div class="main-content">
+      <!-- 文章栏 -->
+      <div class="article-section">
+        
+          
+            <article class="post">
+              <h2 class="post-title"><a href="/2026/04/08/test-post/">Test Post</a></h2>
+              <div class="post-meta">
+                <time datetime="2026-04-08T15:30:00.000Z">2026-04-08</time>
+                
+                  <span class="post-category">
+                    
+                      <a href="/categories/%E6%B5%8B%E8%AF%95/">测试</a>
+                    
+                  </span>
+                
+                
+                  <span class="post-tags">
+                    
+                      <a href="/tags/test/">test</a>
+                    
+                  </span>
+                
+              </div>
+              <div class="post-content">
+                
+              </div>
+            </article>
+          
+            <article class="post">
+              <h2 class="post-title"><a href="/2026/04/08/hello-world/">Hello World</a></h2>
+              <div class="post-meta">
+                <time datetime="2026-04-08T15:15:00.000Z">2026-04-08</time>
+                
+                  <span class="post-category">
+                    
+                      <a href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
+                    
+                  </span>
+                
+                
+                  <span class="post-tags">
+                    
+                      <a href="/tags/hexo/">hexo</a>
+                    
+                      <a href="/tags/blog/">blog</a>
+                    
+                  </span>
+                
+              </div>
+              <div class="post-content">
+                
+              </div>
+            </article>
+          
+          
+          <!-- 分页控件 -->
+          
+        
+      </div>
+      
+      <!-- 侧边栏 -->
+      <div class="sidebar-section">
+        <!-- 最新文章 -->
+        <div class="widget widget-recent-posts">
+          <h3 class="widget-title">最新文章</h3>
+          <ul class="recent-posts-list">
+            
+              <li><a href="/2026/04/08/test-post/">Test Post</a></li>
+            
+              <li><a href="/2026/04/08/hello-world/">Hello World</a></li>
+            
+            
+          </ul>
+        </div>
+        
+        <!-- 友情链接 -->
+        <div class="widget widget-links">
+          <h3 class="widget-title">友情链接</h3>
+          <ul class="links-list">
+            <li><a href="https://hexo.io" target="_blank">Hexo</a></li>
+            <li><a href="https://github.com" target="_blank">GitHub</a></li>
+            <li><a href="https://jekyllrb.com" target="_blank">Jekyll</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer id="footer">
+  <div class="footer-inner">
+    <p>&copy; 2026 法外张三的个人博客</p>
+    <p>Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></p>
+
+  </div>
+</footer>
+
+  <script>
+    // 暗色模式切换
+    const themeToggle = document.getElementById('themeToggle');
+    const html = document.documentElement;
+    
+    // 检查本地存储中的主题设置
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) {
+      html.classList.add(savedTheme);
+      themeToggle.textContent = savedTheme === 'dark' ? '☀️' : '🌙';
+    }
+    
+    themeToggle.addEventListener('click', () => {
+      if (html.classList.contains('dark')) {
+        html.classList.remove('dark');
+        html.classList.add('light');
+        themeToggle.textContent = '🌙';
+        localStorage.setItem('theme', 'light');
+      } else {
+        html.classList.remove('light');
+        html.classList.add('dark');
+        themeToggle.textContent = '☀️';
+        localStorage.setItem('theme', 'dark');
+      }
+    });
+    
+    // 搜索功能
+    const searchForm = document.querySelector('.search-form');
+    searchForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const searchTerm = searchForm.querySelector('.search-input').value;
+      if (searchTerm) {
+        // 实现搜索逻辑
+        const searchResults = [];
+        
+        // 文章数据
+        const postsData = [
+          
+            {
+              title: 'Test Post',
+              url: '/2026/04/08/test-post/',
+              date: '2026-04-08',
+              excerpt: '',
+              categories: [
+                
+                  
+                    {name: '测试', url: '/categories/%E6%B5%8B%E8%AF%95/'}
+                    
+                  
+                
+              ],
+              tags: [
+                
+                  
+                    {name: 'test', url: '/tags/test/'}
+                    
+                  
+                
+              ]
+            },
+          
+            {
+              title: 'Hello World',
+              url: '/2026/04/08/hello-world/',
+              date: '2026-04-08',
+              excerpt: '',
+              categories: [
+                
+                  
+                    {name: '技术', url: '/categories/%E6%8A%80%E6%9C%AF/'}
+                    
+                  
+                
+              ],
+              tags: [
+                
+                  
+                    {name: 'hexo', url: '/tags/hexo/'}
+                    ,
+                  
+                    {name: 'blog', url: '/tags/blog/'}
+                    
+                  
+                
+              ]
+            }
+          
+        ];
+        
+        // 遍历所有文章，检查标题是否包含搜索关键词
+        postsData.forEach(post => {
+          if (post.title.toLowerCase().includes(searchTerm.toLowerCase())) {
+            searchResults.push(post);
+          }
+        });
+        
+        // 显示搜索结果
+        if (searchResults.length > 0) {
+          let resultsHTML = '';
+          
+          searchResults.forEach(result => {
+            resultsHTML += '<article class="post">';
+            resultsHTML += `<h2 class="post-title"><a href="${result.url}">${result.title}</a></h2>`;
+            resultsHTML += '<div class="post-meta">';
+            resultsHTML += `<time datetime="${result.date}">${result.date}</time>`;
+            
+            // 显示分类
+            if (result.categories && result.categories.length > 0) {
+              resultsHTML += '<span class="post-category">';
+              result.categories.forEach((category, index) => {
+                resultsHTML += `<a href="${category.url}">${category.name}</a>`;
+                if (index < result.categories.length - 1) {
+                  resultsHTML += ' ';
+                }
+              });
+              resultsHTML += '</span>';
+            }
+            
+            // 显示标签
+            if (result.tags && result.tags.length > 0) {
+              resultsHTML += '<span class="post-tags">';
+              result.tags.forEach((tag, index) => {
+                resultsHTML += `<a href="${tag.url}">${tag.name}</a>`;
+                if (index < result.tags.length - 1) {
+                  resultsHTML += ' ';
+                }
+              });
+              resultsHTML += '</span>';
+            }
+            
+            resultsHTML += '</div>';
+            if (result.excerpt) {
+              resultsHTML += '<div class="post-content">';
+              resultsHTML += `<p>${result.excerpt}</p>`;
+              resultsHTML += '</div>';
+            }
+            resultsHTML += '</article>';
+          });
+          
+          // 清空文章列表区域并显示搜索结果
+          const articleSection = document.querySelector('.article-section');
+          articleSection.innerHTML = resultsHTML;
+        } else {
+          // 显示无结果提示
+          const articleSection = document.querySelector('.article-section');
+          articleSection.innerHTML = '<div class="post"><h2 class="post-title">未找到相关文章</h2><div class="post-content"><p>没有找到与 "' + searchTerm + '" 相关的文章</p></div></div>';
+        }
+      }
+    });
+  </script>
+</body>
+</html>

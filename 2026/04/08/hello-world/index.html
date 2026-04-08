@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hello World - 个人博客</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    
+    :root {
+      --bg-color: #fff;
+      --text-color: #333;
+      --header-bg: #333;
+      --header-text: #fff;
+      --post-bg: #f9f9f9;
+      --border-color: #ddd;
+      --btn-bg: #333;
+      --btn-text: #fff;
+      --hover-color: #555;
+      --shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    .dark {
+      --bg-color: #121212;
+      --text-color: #e0e0e0;
+      --header-bg: #1e1e1e;
+      --header-text: #e0e0e0;
+      --post-bg: #1e1e1e;
+      --border-color: #333;
+      --btn-bg: #444;
+      --btn-text: #e0e0e0;
+      --hover-color: #666;
+      --shadow: 0 2px 4px rgba(0,0,0,0.3);
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      line-height: 1.6;
+      color: var(--text-color);
+      background-color: var(--bg-color);
+    }
+    
+    #header {
+      background-color: var(--header-bg);
+      color: var(--header-text);
+      padding: 20px 0;
+      text-align: center;
+    }
+    
+    .header-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    
+    .site-title {
+      font-size: 28px;
+      margin-bottom: 0;
+    }
+    
+    .site-title a {
+      color: var(--header-text);
+      text-decoration: none;
+    }
+    
+    #main-nav {
+      margin-top: 0;
+    }
+    
+    .menu {
+      list-style: none;
+      display: flex;
+      gap: 20px;
+      align-items: center;
+    }
+    
+    .menu li a {
+      color: var(--header-text);
+      text-decoration: none;
+      font-size: 14px;
+      transition: color 0.3s ease;
+    }
+    
+    .menu li a:hover {
+      color: #ff9800;
+    }
+    
+    .theme-toggle {
+      background: none;
+      border: none;
+      color: var(--header-text);
+      cursor: pointer;
+      font-size: 18px;
+      margin-left: 10px;
+    }
+    
+    #main {
+      max-width: 800px;
+      margin: 20px auto;
+      padding: 0 20px;
+    }
+    
+    .content-wrap {
+      width: 100%;
+    }
+    
+    .post {
+      background-color: var(--post-bg);
+      padding: 25px;
+      margin-bottom: 20px;
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .post:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    
+    .post-title {
+      font-size: 24px;
+      margin-bottom: 20px;
+      color: var(--text-color);
+    }
+    
+    .post-meta {
+      font-size: 14px;
+      color: #999;
+      margin-bottom: 20px;
+      display: flex;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+    
+    .post-content {
+      margin-bottom: 30px;
+      line-height: 1.8;
+    }
+    
+    .post-content h1,
+    .post-content h2,
+    .post-content h3,
+    .post-content h4,
+    .post-content h5,
+    .post-content h6 {
+      margin-top: 20px;
+      margin-bottom: 10px;
+      color: var(--text-color);
+    }
+    
+    .post-content p {
+      margin-bottom: 15px;
+    }
+    
+    .post-content ul,
+    .post-content ol {
+      margin-bottom: 15px;
+      margin-left: 20px;
+    }
+    
+    .post-content li {
+      margin-bottom: 5px;
+    }
+    
+    .post-content a {
+      color: #ff9800;
+      text-decoration: none;
+    }
+    
+    .post-content a:hover {
+      text-decoration: underline;
+    }
+    
+    .btn {
+      display: inline-block;
+      padding: 8px 20px;
+      background-color: var(--btn-bg);
+      color: var(--btn-text);
+      text-decoration: none;
+      border-radius: 4px;
+      font-size: 14px;
+      transition: background-color 0.3s ease;
+    }
+    
+    .btn:hover {
+      background-color: var(--hover-color);
+    }
+    
+    #sidebar {
+      width: 320px;
+      flex-shrink: 0;
+    }
+    
+    .widget {
+      background-color: var(--post-bg);
+      padding: 20px;
+      margin-bottom: 20px;
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+    }
+    
+    .widget-title {
+      font-size: 18px;
+      margin-bottom: 15px;
+      border-bottom: 2px solid #ff9800;
+      padding-bottom: 8px;
+      color: var(--text-color);
+    }
+    
+    .category-list,
+    .tag-list,
+    .recent-posts-list,
+    .links-list {
+      list-style: none;
+    }
+    
+    .category-list li,
+    .tag-list li,
+    .recent-posts-list li,
+    .links-list li {
+      margin-bottom: 10px;
+    }
+    
+    .category-list li a,
+    .tag-list li a,
+    .recent-posts-list li a,
+    .links-list li a {
+      color: var(--text-color);
+      text-decoration: none;
+      font-size: 14px;
+      transition: color 0.3s ease;
+    }
+    
+    .category-list li a:hover,
+    .tag-list li a:hover,
+    .recent-posts-list li a:hover,
+    .links-list li a:hover {
+      color: #ff9800;
+    }
+    
+    .search-form {
+      display: flex;
+      gap: 5px;
+    }
+    
+    .search-input {
+      flex: 1;
+      padding: 8px 12px;
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+    }
+    
+    .search-btn {
+      padding: 8px 12px;
+      background-color: var(--btn-bg);
+      color: var(--btn-text);
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    
+    .search-btn:hover {
+      background-color: var(--hover-color);
+    }
+    
+    .tag-cloud {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    
+    .tag-cloud a {
+      padding: 4px 12px;
+      background-color: #f0f0f0;
+      color: #333;
+      text-decoration: none;
+      border-radius: 15px;
+      font-size: 13px;
+      transition: all 0.3s ease;
+    }
+    
+    .dark .tag-cloud a {
+      background-color: #333;
+      color: #e0e0e0;
+    }
+    
+    .tag-cloud a:hover {
+      background-color: #ff9800;
+      color: #fff;
+    }
+    
+    #footer {
+      background-color: var(--header-bg);
+      color: var(--header-text);
+      text-align: center;
+      padding: 15px 0;
+      margin-top: 20px;
+    }
+    
+    .footer-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+      font-size: 14px;
+    }
+    
+    .footer-links {
+      margin-top: 15px;
+    }
+    
+    .footer-links a {
+      color: var(--header-text);
+      text-decoration: none;
+      margin: 0 10px;
+      transition: color 0.3s ease;
+    }
+    
+    .footer-links a:hover {
+      color: #ff9800;
+    }
+    
+    @media (max-width: 768px) {
+      .header-inner {
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+      }
+      
+      .menu {
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+      
+      #main {
+        flex-direction: column;
+      }
+      
+      #sidebar {
+        width: 100%;
+      }
+    }
+  </style>
+<meta name="generator" content="Hexo 6.3.0"></head>
+<body>
+  <header id="header">
+  <div class="header-inner">
+    <h1 class="site-title"><a href="/">法外张三的个人博客</a></h1>
+    <nav id="main-nav">
+      <ul class="menu">
+        
+          <li><a href="/">首页</a></li>
+        
+        <li><a href="/categories">分类</a></li>
+        
+        <li><a href="/tags">标签</a></li>
+        
+        <li><button class="theme-toggle" id="themeToggle">🌙</button></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+  <main id="main">
+    <div class="main-inner">
+      <div class="content-wrap">
+        <div id="content">
+          <article class="post">
+            <h1 class="post-title">Hello World</h1>
+            <div class="post-meta">
+              <time datetime="2026-04-08T15:15:00.000Z">2026-04-08</time>
+              
+                <span class="post-category">
+                  
+                    <a href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
+                  
+                </span>
+              
+              
+                <span class="post-tags">
+                  
+                    <a href="/tags/hexo/">hexo</a>
+                  
+                    <a href="/tags/blog/">blog</a>
+                  
+                </span>
+              
+            </div>
+            <div class="post-content">
+              <h1 id="Hello-World"><a href="#Hello-World" class="headerlink" title="Hello World"></a>Hello World</h1><p>欢迎来到我的个人博客！这是我的第一篇文章。</p>
+<h2 id="关于这个博客"><a href="#关于这个博客" class="headerlink" title="关于这个博客"></a>关于这个博客</h2><p>这个博客使用 Hexo 静态博客框架搭建，部署在 Gitee Pages 上。</p>
+<h3 id="功能特点"><a href="#功能特点" class="headerlink" title="功能特点"></a>功能特点</h3><ul>
+<li>支持 Markdown 写作</li>
+<li>响应式设计</li>
+<li>分类和标签管理</li>
+<li>第三方评论系统</li>
+<li>RSS 订阅</li>
+</ul>
+<p>希望你喜欢这个博客！</p>
+
+            </div>
+          </article>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer id="footer">
+  <div class="footer-inner">
+    <p>&copy; 2026 法外张三的个人博客</p>
+    <p>Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></p>
+
+  </div>
+</footer>
+
+  <script>
+    // 暗色模式切换
+    const themeToggle = document.getElementById('themeToggle');
+    const html = document.documentElement;
+    
+    // 检查本地存储中的主题设置
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) {
+      html.classList.add(savedTheme);
+      themeToggle.textContent = savedTheme === 'dark' ? '☀️' : '🌙';
+    }
+    
+    themeToggle.addEventListener('click', () => {
+      if (html.classList.contains('dark')) {
+        html.classList.remove('dark');
+        html.classList.add('light');
+        themeToggle.textContent = '🌙';
+        localStorage.setItem('theme', 'light');
+      } else {
+        html.classList.remove('light');
+        html.classList.add('dark');
+        themeToggle.textContent = '☀️';
+        localStorage.setItem('theme', 'dark');
+      }
+    });
+    
+    // 搜索功能
+    const searchForm = document.querySelector('.search-form');
+    searchForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const searchTerm = searchForm.querySelector('.search-input').value;
+      if (searchTerm) {
+        // 这里可以实现搜索功能，例如跳转到搜索结果页
+        alert(`搜索: ${searchTerm}`);
+      }
+    });
+  </script>
+</body>
+</html>
