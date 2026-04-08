@@ -1,0 +1,17 @@
+# Dependencies
+node_modules/
+
+# Generated files
+public/
+
+# Database
+db.json
+
+# Editor directories and files
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?

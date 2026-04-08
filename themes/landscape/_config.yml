@@ -1,0 +1,26 @@
+# Hexo Theme Landscape
+
+# Header
+menu:
+  Home: /
+  Categories: /categories
+  Tags: /tags
+
+# Content
+excerpt_link: Read More
+fancybox: true
+
+# Sidebar
+sidebar: right
+widgets:
+- category
+- tag
+- tagcloud
+- archive
+- recent_posts
+
+# Miscellaneous
+google_analytics:
+disqus_shortname:
+favicon: /favicon.ico
+rss: /atom.xml
