@@ -1,17 +1,24 @@
 # Dependencies
 node_modules/
 
-# Generated files
+# Hexo generated files
 public/
+.deploy_git/
 
-# Database
-db.json
-
-# Editor directories and files
+# IDE and editor files
 .vscode/
 .idea/
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Log files
+logs
+*.log
+
+# Package manager files
+package-lock.json

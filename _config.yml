@@ -65,6 +65,36 @@ pagination_dir: page
 ## Themes: https://hexo.io/themes/
 theme: landscape
 
+# Markdown
+## Docs: https://hexo.io/docs/configuration.html#Markdown
+markdown:
+  render:
+    html: true
+    xhtmlOut: false
+    breaks: false
+    langPrefix: 'language-'
+    linkify: true
+    typographer: true
+    quotes: '""'''
+  plugins:
+    - name: markdown-it-katex
+    - name: markdown-it-footnote
+    - name: markdown-it-deflist
+    - name: markdown-it-task-lists
+      options:
+        enabled: true
+        label: true
+        labelAfter: true
+  anchors:
+    level: 2
+    collisionSuffix: 'v'
+    permalink: false
+    permalinkClass: 'header-anchor'
+    permalinkSide: 'left'
+    permalinkSymbol: '#'
+    case: 0
+    separator: '-'
+
 # Deployment
 ## Docs: https://hexo.io/docs/deployment.html
 deploy:
