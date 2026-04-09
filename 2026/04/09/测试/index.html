@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Markdown 格式预览与测试文档 - 个人博客</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.css" integrity="sha384-vKruj+a13U8yHIkAyGgK1J3ArTLzrFGBbBc0tDp4ad/EyewESeXE/Iv67Aj8gKZ0" crossorigin="anonymous">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.js" integrity="sha384-PwRUT/YqbnEjkZO0zZxNqcxACrXe+j766U2amXcgMg5457rve2Y7I6ZJSm2A0mS4" crossorigin="anonymous"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05czjhAUe+/A0F3uVLCz0" crossorigin="anonymous" onload="renderMathInElement(document.body, {delimiters: [{left: '$', right: '$', display: false}, {left: '$$', right: '$$', display: true}, {left: '\\[', right: '\\]', display: true}, {left: '\\(', right: '\\)', display: false}], throwOnError: false, trust: true});"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    
+    :root {
+      --bg-color: #fff;
+      --text-color: #333;
+      --header-bg: #333;
+      --header-text: #fff;
+      --post-bg: #f9f9f9;
+      --border-color: #ddd;
+      --btn-bg: #333;
+      --btn-text: #fff;
+      --hover-color: #555;
+      --shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    .dark {
+      --bg-color: #121212;
+      --text-color: #e0e0e0;
+      --header-bg: #1e1e1e;
+      --header-text: #e0e0e0;
+      --post-bg: #1e1e1e;
+      --border-color: #333;
+      --btn-bg: #444;
+      --btn-text: #e0e0e0;
+      --hover-color: #666;
+      --shadow: 0 2px 4px rgba(0,0,0,0.3);
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      line-height: 1.6;
+      color: var(--text-color);
+      background-color: var(--bg-color);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    
+    #header {
+      background-color: var(--header-bg);
+      color: var(--header-text);
+      padding: 20px 0;
+      text-align: center;
+    }
+    
+    .header-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    
+    .site-title {
+      font-size: 28px;
+      margin-bottom: 0;
+    }
+    
+    .site-title a {
+      color: var(--header-text);
+      text-decoration: none;
+    }
+    
+    #main-nav {
+      margin-top: 0;
+    }
+    
+    .menu {
+      list-style: none;
+      display: flex;
+      gap: 20px;
+      align-items: center;
+    }
+    
+    .menu li a {
+      color: var(--header-text);
+      text-decoration: none;
+      font-size: 14px;
+      transition: color 0.3s ease;
+    }
+    
+    .menu li a:hover {
+      color: #ff9800;
+    }
+    
+    .theme-toggle {
+      background: none;
+      border: none;
+      color: var(--header-text);
+      cursor: pointer;
+      font-size: 18px;
+      margin-left: 10px;
+    }
+    
+    #main {
+      width: 100%;
+      margin: 0 auto;
+      padding: 0;
+      flex: 1;
+    }
+    
+    .content-wrap {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+      width: 100%;
+    }
+    
+    .post {
+      background-color: var(--post-bg);
+      padding: 25px;
+      margin-bottom: 20px;
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .post:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    
+    .post-title {
+      font-size: 24px;
+      margin-bottom: 20px;
+      color: var(--text-color);
+    }
+    
+    .post-meta {
+      font-size: 14px;
+      color: #999;
+      margin-bottom: 20px;
+      display: flex;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+    
+    .post-content {
+      margin-bottom: 30px;
+      line-height: 1.8;
+    }
+    
+    .post-content h1,
+    .post-content h2,
+    .post-content h3,
+    .post-content h4,
+    .post-content h5,
+    .post-content h6 {
+      margin-top: 20px;
+      margin-bottom: 10px;
+      color: var(--text-color);
+    }
+    
+    .post-content p {
+      margin-bottom: 15px;
+    }
+    
+    .post-content ul,
+    .post-content ol {
+      margin-bottom: 15px;
+      margin-left: 20px;
+    }
+    
+    .post-content li {
+      margin-bottom: 5px;
+    }
+    
+    .post-content a {
+      color: #ff9800;
+      text-decoration: none;
+    }
+    
+    .post-content a:hover {
+      text-decoration: underline;
+    }
+    
+    .post-content table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 15px;
+      border: 1px solid var(--border-color);
+    }
+    
+    .post-content th,
+    .post-content td {
+      padding: 8px 12px;
+      text-align: left;
+      border: 1px solid var(--border-color);
+    }
+    
+    .post-content th {
+      background-color: #f5f5f5;
+      font-weight: bold;
+    }
+    
+    .dark .post-content th {
+      background-color: #333;
+    }
+    
+    .post-content ul.contains-task-list {
+      list-style: none;
+      margin-left: 0;
+    }
+    
+    .post-content ul.contains-task-list li.task-list-item {
+      margin-bottom: 5px;
+      display: flex;
+      align-items: center;
+    }
+    
+    .post-content ul.contains-task-list li.task-list-item input.task-list-item-checkbox {
+      margin-right: 8px;
+      flex-shrink: 0;
+    }
+    
+    .post-content ul.contains-task-list li.task-list-item label.task-list-item-label {
+      flex-grow: 1;
+    }
+    
+    .btn {
+      display: inline-block;
+      padding: 8px 20px;
+      background-color: var(--btn-bg);
+      color: var(--btn-text);
+      text-decoration: none;
+      border-radius: 4px;
+      font-size: 14px;
+      transition: background-color 0.3s ease;
+    }
+    
+    .btn:hover {
+      background-color: var(--hover-color);
+    }
+    
+    #sidebar {
+      width: 320px;
+      flex-shrink: 0;
+    }
+    
+    .widget {
+      background-color: var(--post-bg);
+      padding: 20px;
+      margin-bottom: 20px;
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+    }
+    
+    .widget-title {
+      font-size: 18px;
+      margin-bottom: 15px;
+      border-bottom: 2px solid #ff9800;
+      padding-bottom: 8px;
+      color: var(--text-color);
+    }
+    
+    .category-list,
+    .tag-list,
+    .recent-posts-list,
+    .links-list {
+      list-style: none;
+    }
+    
+    .category-list li,
+    .tag-list li,
+    .recent-posts-list li,
+    .links-list li {
+      margin-bottom: 10px;
+    }
+    
+    .category-list li a,
+    .tag-list li a,
+    .recent-posts-list li a,
+    .links-list li a {
+      color: var(--text-color);
+      text-decoration: none;
+      font-size: 14px;
+      transition: color 0.3s ease;
+    }
+    
+    .category-list li a:hover,
+    .tag-list li a:hover,
+    .recent-posts-list li a:hover,
+    .links-list li a:hover {
+      color: #ff9800;
+    }
+    
+    .search-form {
+      display: flex;
+      gap: 5px;
+    }
+    
+    .search-input {
+      flex: 1;
+      padding: 8px 12px;
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+    }
+    
+    .search-btn {
+      padding: 8px 12px;
+      background-color: var(--btn-bg);
+      color: var(--btn-text);
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    
+    .search-btn:hover {
+      background-color: var(--hover-color);
+    }
+    
+    .tag-cloud {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    
+    .tag-cloud a {
+      padding: 4px 12px;
+      background-color: #f0f0f0;
+      color: #333;
+      text-decoration: none;
+      border-radius: 15px;
+      font-size: 13px;
+      transition: all 0.3s ease;
+    }
+    
+    .dark .tag-cloud a {
+      background-color: #333;
+      color: #e0e0e0;
+    }
+    
+    .tag-cloud a:hover {
+      background-color: #ff9800;
+      color: #fff;
+    }
+    
+    #footer {
+      background-color: var(--header-bg);
+      color: var(--header-text);
+      text-align: center;
+      padding: 15px 0;
+      margin-top: 20px;
+    }
+    
+    .footer-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+      font-size: 14px;
+    }
+    
+    .footer-links {
+      margin-top: 15px;
+    }
+    
+    .footer-links a {
+      color: var(--header-text);
+      text-decoration: none;
+      margin: 0 10px;
+      transition: color 0.3s ease;
+    }
+    
+    .footer-links a:hover {
+      color: #ff9800;
+    }
+    
+    @media (max-width: 768px) {
+      .header-inner {
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+      }
+      
+      .menu {
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+      
+      #main {
+        flex-direction: column;
+      }
+      
+      #sidebar {
+        width: 100%;
+      }
+    }
+  </style>
+<meta name="generator" content="Hexo 6.3.0"></head>
+<body>
+  <header id="header">
+  <div class="header-inner">
+    <h1 class="site-title"><a href="/">法外张三的个人博客</a></h1>
+    <nav id="main-nav">
+      <ul class="menu">
+        
+          <li><a href="/">首页</a></li>
+        
+        <li><a href="/categories">分类</a></li>
+        
+        <li><a href="/tags">标签</a></li>
+        
+        <li><button class="theme-toggle" id="themeToggle">🌙</button></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+  <main id="main">
+    <div class="main-inner">
+      <div class="content-wrap">
+        <div id="content">
+          <article class="post">
+            <div class="post-content">
+              <h1>Markdown 格式预览与测试文档</h1>
+<h2 id="1-标题级别测试">1. 标题级别测试</h2>
+<h1>一级标题</h1>
+<h2 id="二级标题">二级标题</h2>
+<h3 id="三级标题">三级标题</h3>
+<h4 id="四级标题">四级标题</h4>
+<h5 id="五级标题">五级标题</h5>
+<h6 id="六级标题">六级标题</h6>
+<h2 id="2-文本样式测试">2. 文本样式测试</h2>
+<p>这是普通文本。我们可以使用 <strong>粗体</strong> 来强调重要内容，也可以使用 <em>斜体</em> 表示轻微强调，或者使用 <em><strong>粗斜体</strong></em> 进行强烈强调。</p>
+<p>有时我们需要标记 <strong>一段话中的重点</strong>，或者添加 <s>删除线</s> 来表示修改内容。还可以使用 <code>行内代码</code> 来提及变量名或函数名。</p>
+<h2 id="3-引用块测试">3. 引用块测试</h2>
+<blockquote>
+<p>这是一级引用块。Markdown 中的引用块通常用于展示他人的言论、参考资料或需要突出的说明文字。</p>
+<blockquote>
+<p>这是二级嵌套引用。引用块可以多层嵌套，每一层都可以有自己独立的样式和内容。</p>
+<blockquote>
+<p>这是三级嵌套引用。在实际写作中，嵌套引用块并不常见，但它展示了 Markdown 语法的灵活性。</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<h2 id="4-列表测试">4. 列表测试</h2>
+<h3 id="无序列表">无序列表</h3>
+<ul>
+<li>苹果
+<ul>
+<li>红富士</li>
+<li>嘎啦</li>
+</ul>
+</li>
+<li>香蕉
+<ul>
+<li>进口香蕉</li>
+<li>国产香蕉</li>
+</ul>
+</li>
+<li>橙子
+<ul>
+<li>脐橙</li>
+<li>血橙</li>
+</ul>
+</li>
+</ul>
+<h3 id="有序列表">有序列表</h3>
+<ol>
+<li>第一步：准备原材料
+<ol>
+<li>面粉 500g</li>
+<li>鸡蛋 3个</li>
+<li>白糖 100g</li>
+</ol>
+</li>
+<li>第二步：混合搅拌
+<ol>
+<li>将面粉过筛</li>
+<li>打入鸡蛋</li>
+<li>加入白糖</li>
+</ol>
+</li>
+<li>第三步：烘烤成型
+<ol>
+<li>预热烤箱至180度</li>
+<li>烘烤25分钟</li>
+<li>取出冷却</li>
+</ol>
+</li>
+</ol>
+<h3 id="任务列表">任务列表</h3>
+<ul class="contains-task-list">
+<li class="task-list-item enabled"><input class="task-list-item-checkbox" checked=""type="checkbox" id="task-item-5578753"><label class="task-list-item-label" for="task-item-5578753"> 完成项目方案设计</label></li>
+<li class="task-list-item enabled"><input class="task-list-item-checkbox" checked=""type="checkbox" id="task-item-3114623"><label class="task-list-item-label" for="task-item-3114623"> 通过技术评审会议</label></li>
+<li class="task-list-item enabled"><input class="task-list-item-checkbox"type="checkbox" id="task-item-1004619"><label class="task-list-item-label" for="task-item-1004619"> 编写核心功能代码</label></li>
+<li class="task-list-item enabled"><input class="task-list-item-checkbox"type="checkbox" id="task-item-7445924"><label class="task-list-item-label" for="task-item-7445924"> 进行单元测试</label></li>
+<li class="task-list-item enabled"><input class="task-list-item-checkbox"type="checkbox" id="task-item-6689894"><label class="task-list-item-label" for="task-item-6689894"> 部署上线验证</label></li>
+</ul>
+<h2 id="5-代码块测试">5. 代码块测试</h2>
+<h3 id="普通代码块">普通代码块</h3>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">fibonacci</span>(<span class="params">n</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;计算斐波那契数列的第n项&quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">if</span> n &lt;= <span class="number">0</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">    <span class="keyword">elif</span> n == <span class="number">1</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="number">1</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">return</span> fibonacci(n-<span class="number">1</span>) + fibonacci(n-<span class="number">2</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 输出前10个斐波那契数</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">10</span>):</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&quot;F(<span class="subst">&#123;i&#125;</span>) = <span class="subst">&#123;fibonacci(i)&#125;</span>&quot;</span>)</span><br></pre></td></tr></table></figure>
+<h3 id="JSON-代码块">JSON 代码块</h3>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;Markdown预览器&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;version&quot;</span><span class="punctuation">:</span> <span class="string">&quot;1.0.0&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;features&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">&quot;语法高亮&quot;</span><span class="punctuation">,</span> <span class="string">&quot;实时渲染&quot;</span><span class="punctuation">,</span> <span class="string">&quot;导出PDF&quot;</span><span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;settings&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;theme&quot;</span><span class="punctuation">:</span> <span class="string">&quot;light&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;fontSize&quot;</span><span class="punctuation">:</span> <span class="number">14</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+<h3 id="Shell-代码块">Shell 代码块</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 安装依赖包</span></span><br><span class="line">npm install marked highlight.js</span><br><span class="line"></span><br><span class="line"><span class="comment"># 启动开发服务器</span></span><br><span class="line">npm run dev</span><br><span class="line"></span><br><span class="line"><span class="comment"># 构建生产版本</span></span><br><span class="line">npm run build</span><br></pre></td></tr></table></figure>
+<h2 id="6-表格测试">6. 表格测试</h2>
+<table>
+<thead>
+<tr>
+<th>姓名</th>
+<th>部门</th>
+<th>职位</th>
+<th>入职日期</th>
+<th>状态</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>张三</td>
+<td>技术部</td>
+<td>高级工程师</td>
+<td>2020-03-15</td>
+<td>在职</td>
+</tr>
+<tr>
+<td>李四</td>
+<td>产品部</td>
+<td>产品经理</td>
+<td>2019-07-22</td>
+<td>在职</td>
+</tr>
+<tr>
+<td>王五</td>
+<td>运营部</td>
+<td>运营主管</td>
+<td>2021-01-10</td>
+<td>试用期</td>
+</tr>
+<tr>
+<td>赵六</td>
+<td>设计部</td>
+<td>UI设计师</td>
+<td>2020-11-03</td>
+<td>在职</td>
+</tr>
+</tbody>
+</table>
+<h3 id="对齐方式测试">对齐方式测试</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">左对齐</th>
+<th style="text-align:center">居中对齐</th>
+<th style="text-align:right">右对齐</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">100</td>
+<td style="text-align:center">测试文本</td>
+<td style="text-align:right">999.99</td>
+</tr>
+<tr>
+<td style="text-align:left">200</td>
+<td style="text-align:center">示例内容</td>
+<td style="text-align:right">1,234.50</td>
+</tr>
+<tr>
+<td style="text-align:left">300</td>
+<td style="text-align:center">演示数据</td>
+<td style="text-align:right">88.88</td>
+</tr>
+</tbody>
+</table>
+<h2 id="7-链接与图片测试">7. 链接与图片测试</h2>
+<h3 id="超链接">超链接</h3>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://github.com">GitHub 官网</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.markdownguide.org">Markdown 官方教程</a></li>
+<li>这是一个带标题的链接：<a target="_blank" rel="noopener" href="https://www.baidu.com" title="搜索网站">百度一下</a></li>
+</ul>
+<h3 id="图片">图片</h3>
+<p>![Markdown Logo](https://markdown-here.com/img/icon256.png Markdown 图标)</p>
+<p><em>图片说明：以上为示例图片链接，实际预览时若网络不通可能无法显示。</em></p>
+<h2 id="8-分割线与脚注">8. 分割线与脚注</h2>
+<hr>
+<p>分割线之上是表格内容，分割线之下是脚注内容。</p>
+<p>脚注示例<sup class="footnote-ref"><a href="#fn1" id="fnref1">[1]</a></sup>：这是一段包含脚注的文字，用于展示 Markdown 脚注语法的使用方式<sup class="footnote-ref"><a href="#fn2" id="fnref2">[2]</a></sup>。</p>
+<h2 id="9-转义字符测试">9. 转义字符测试</h2>
+<p>以下字符在 Markdown 中具有特殊含义，如需显示原始字符请使用反斜线转义：</p>
+<p>*星号不产生斜体*
+_下划线不产生强调_
+[方括号不产生链接]
+#井号不产生标题</p>
+<h2 id="10-段落与换行测试">10. 段落与换行测试</h2>
+<p>这是第一个段落。Markdown 中段落之间用空行分隔。</p>
+<p>这是第二个段落，紧跟着换行。<br>
+注意这一行末尾有两个空格，表示强制换行。<br>
+如果需要在不产生新段落的情况下换行，就在行末添加两个空格。</p>
+<h2 id="总结">总结</h2>
+<p>以上内容涵盖了 Markdown 语法中的常用元素：</p>
+<ul>
+<li>6 级标题</li>
+<li>粗体、斜体、删除线、行内代码</li>
+<li>多级引用块</li>
+<li>无序列表、有序列表、任务列表</li>
+<li>带语法高亮的代码块</li>
+<li>对齐表格</li>
+<li>超链接与图片</li>
+<li>分割线与脚注</li>
+<li>转义字符</li>
+<li>段落与换行</li>
+</ul>
+<p>这份文档可用于测试各类 Markdown 编辑器和渲染工具的显示效果，验证它们对标准语法的支持程度。如果某个工具能够正确渲染以上所有元素，说明其 Markdown 解析能力较为完善。</p>
+<hr class="footnotes-sep">
+<section class="footnotes">
+<ol class="footnotes-list">
+<li id="fn1" class="footnote-item"><p>这是脚注的详细说明内容，通常放在文档末尾。 <a href="#fnref1" class="footnote-backref">↩︎</a></p>
+</li>
+<li id="fn2" class="footnote-item"><p>脚注可以包含多个段落，但这里为了简洁，只展示单行内容。 <a href="#fnref2" class="footnote-backref">↩︎</a></p>
+</li>
+</ol>
+</section>
+
+            </div>
+          </article>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer id="footer">
+  <div class="footer-inner">
+    <p>&copy; 2026 法外张三的个人博客</p>
+    <p>Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></p>
+
+  </div>
+</footer>
+
+  <script>
+    // 暗色模式切换
+    const themeToggle = document.getElementById('themeToggle');
+    const html = document.documentElement;
+    
+    // 检查本地存储中的主题设置
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) {
+      html.classList.add(savedTheme);
+      themeToggle.textContent = savedTheme === 'dark' ? '☀️' : '🌙';
+    }
+    
+    themeToggle.addEventListener('click', () => {
+      if (html.classList.contains('dark')) {
+        html.classList.remove('dark');
+        html.classList.add('light');
+        themeToggle.textContent = '🌙';
+        localStorage.setItem('theme', 'light');
+      } else {
+        html.classList.remove('light');
+        html.classList.add('dark');
+        themeToggle.textContent = '☀️';
+        localStorage.setItem('theme', 'dark');
+      }
+    });
+    
+    // 搜索功能
+    const searchForm = document.querySelector('.search-form');
+    searchForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const searchTerm = searchForm.querySelector('.search-input').value;
+      if (searchTerm) {
+        // 这里可以实现搜索功能，例如跳转到搜索结果页
+        alert(`搜索: ${searchTerm}`);
+      }
+    });
+  </script>
+</body>
+</html>
