@@ -4,6 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>标签 - 个人博客</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.css" integrity="sha384-vKruj+a13U8yHIkAyGgK1J3ArTLzrFGBbBc0tDp4ad/EyewESeXE/Iv67Aj8gKZ0" crossorigin="anonymous">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.js" integrity="sha384-PwRUT/YqbnEjkZO0zZxNqcxACrXe+j766U2amXcgMg5457rve2Y7I6ZJSm2A0mS4" crossorigin="anonymous"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05czjhAUe+/A0F3uVLCz0" crossorigin="anonymous" onload="renderMathInElement(document.body, {delimiters: [{left: '$', right: '$', display: false}, {left: '$$', right: '$$', display: true}, {left: '\\[', right: '\\]', display: true}, {left: '\\(', right: '\\)', display: false}], throwOnError: false, trust: true});"></script>
   <style>
     * {
       margin: 0;
@@ -43,6 +46,9 @@
       line-height: 1.6;
       color: var(--text-color);
       background-color: var(--bg-color);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
     }
     
     #header {
@@ -104,12 +110,16 @@
     }
     
     #main {
-      max-width: 800px;
-      margin: 20px auto;
-      padding: 0 20px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 0;
+      flex: 1;
     }
     
     .content-wrap {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
       width: 100%;
     }
     
@@ -213,6 +223,49 @@
     
     .tag-post a:hover {
       color: #ff9800;
+    }
+    
+    .post-content table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 15px;
+      border: 1px solid var(--border-color);
+    }
+    
+    .post-content th,
+    .post-content td {
+      padding: 8px 12px;
+      text-align: left;
+      border: 1px solid var(--border-color);
+    }
+    
+    .post-content th {
+      background-color: #f5f5f5;
+      font-weight: bold;
+    }
+    
+    .dark .post-content th {
+      background-color: #333;
+    }
+    
+    .post-content ul.contains-task-list {
+      list-style: none;
+      margin-left: 0;
+    }
+    
+    .post-content ul.contains-task-list li.task-list-item {
+      margin-bottom: 5px;
+      display: flex;
+      align-items: center;
+    }
+    
+    .post-content ul.contains-task-list li.task-list-item input.task-list-item-checkbox {
+      margin-right: 8px;
+      flex-shrink: 0;
+    }
+    
+    .post-content ul.contains-task-list li.task-list-item label.task-list-item-label {
+      flex-grow: 1;
     }
     
     #sidebar {
@@ -367,69 +420,71 @@
 </header>
 
   <main id="main">
-    <div class="tag">
-      <h1 class="tag-title">文章标签</h1>
-      
-      <div class="tag-info">
-        <p>共 <strong>3</strong> 个标签</p>
-      </div>
-      
-      
-        <!-- 标签云 -->
-        <div class="tag-cloud">
-          
-            <a href="/tags/test/" class="tag-item">
-              test
-              <span class="tag-item-count">1</span>
-            </a>
-          
-            <a href="/tags/hexo/" class="tag-item">
-              hexo
-              <span class="tag-item-count">1</span>
-            </a>
-          
-            <a href="/tags/blog/" class="tag-item">
-              blog
-              <span class="tag-item-count">1</span>
-            </a>
-          
+    <div class="content-wrap">
+      <div class="tag">
+        <h1 class="tag-title">文章标签</h1>
+        
+        <div class="tag-info">
+          <p>共 <strong>3</strong> 个标签</p>
         </div>
         
-        <!-- 标签列表 -->
-        <ul class="tag-list">
+        
+          <!-- 标签云 -->
+          <div class="tag-cloud">
+            
+              <a href="/tags/hexo/" class="tag-item">
+                hexo
+                <span class="tag-item-count">1</span>
+              </a>
+            
+              <a href="/tags/blog/" class="tag-item">
+                blog
+                <span class="tag-item-count">1</span>
+              </a>
+            
+              <a href="/tags/test/" class="tag-item">
+                test
+                <span class="tag-item-count">1</span>
+              </a>
+            
+          </div>
           
-            <li class="tag-list-item">
-              <h2 class="tag-list-item-title"><a href="/tags/test/">test</a></h2>
-              <p class="tag-list-item-count">共 1 篇文章</p>
-              <ul class="tag-posts">
-                
-                  <li class="tag-post"><a href="/2026/04/08/test-post/">Test Post</a></li>
-                
-              </ul>
-            </li>
-          
-            <li class="tag-list-item">
-              <h2 class="tag-list-item-title"><a href="/tags/hexo/">hexo</a></h2>
-              <p class="tag-list-item-count">共 1 篇文章</p>
-              <ul class="tag-posts">
-                
-                  <li class="tag-post"><a href="/2026/04/08/hello-world/">Hello World</a></li>
-                
-              </ul>
-            </li>
-          
-            <li class="tag-list-item">
-              <h2 class="tag-list-item-title"><a href="/tags/blog/">blog</a></h2>
-              <p class="tag-list-item-count">共 1 篇文章</p>
-              <ul class="tag-posts">
-                
-                  <li class="tag-post"><a href="/2026/04/08/hello-world/">Hello World</a></li>
-                
-              </ul>
-            </li>
-          
-        </ul>
-      
+          <!-- 标签列表 -->
+          <ul class="tag-list">
+            
+              <li class="tag-list-item">
+                <h2 class="tag-list-item-title"><a href="/tags/hexo/">hexo</a></h2>
+                <p class="tag-list-item-count">共 1 篇文章</p>
+                <ul class="tag-posts">
+                  
+                    <li class="tag-post"><a href="/2026/04/08/hello-world/">Hello World</a></li>
+                  
+                </ul>
+              </li>
+            
+              <li class="tag-list-item">
+                <h2 class="tag-list-item-title"><a href="/tags/blog/">blog</a></h2>
+                <p class="tag-list-item-count">共 1 篇文章</p>
+                <ul class="tag-posts">
+                  
+                    <li class="tag-post"><a href="/2026/04/08/hello-world/">Hello World</a></li>
+                  
+                </ul>
+              </li>
+            
+              <li class="tag-list-item">
+                <h2 class="tag-list-item-title"><a href="/tags/test/">test</a></h2>
+                <p class="tag-list-item-count">共 1 篇文章</p>
+                <ul class="tag-posts">
+                  
+                    <li class="tag-post"><a href="/2026/04/08/test-post/">Test Post</a></li>
+                  
+                </ul>
+              </li>
+            
+          </ul>
+        
+      </div>
     </div>
   </main>
 

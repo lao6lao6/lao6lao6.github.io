@@ -4,6 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>分类 - 个人博客</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.css" integrity="sha384-vKruj+a13U8yHIkAyGgK1J3ArTLzrFGBbBc0tDp4ad/EyewESeXE/Iv67Aj8gKZ0" crossorigin="anonymous">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.js" integrity="sha384-PwRUT/YqbnEjkZO0zZxNqcxACrXe+j766U2amXcgMg5457rve2Y7I6ZJSm2A0mS4" crossorigin="anonymous"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05czjhAUe+/A0F3uVLCz0" crossorigin="anonymous" onload="renderMathInElement(document.body, {delimiters: [{left: '$', right: '$', display: false}, {left: '$$', right: '$$', display: true}, {left: '\\[', right: '\\]', display: true}, {left: '\\(', right: '\\)', display: false}], throwOnError: false, trust: true});"></script>
   <style>
     * {
       margin: 0;
@@ -43,6 +46,9 @@
       line-height: 1.6;
       color: var(--text-color);
       background-color: var(--bg-color);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
     }
     
     #header {
@@ -104,9 +110,10 @@
     }
     
     #main {
-      max-width: 800px;
-      margin: 20px auto;
-      padding: 0 20px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 0;
+      flex: 1;
     }
     
     .main-inner {
@@ -114,6 +121,9 @@
     }
     
     .content-wrap {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
       width: 100%;
     }
     
@@ -182,6 +192,49 @@
     
     .category-post a:hover {
       color: #ff9800;
+    }
+    
+    .post-content table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 15px;
+      border: 1px solid var(--border-color);
+    }
+    
+    .post-content th,
+    .post-content td {
+      padding: 8px 12px;
+      text-align: left;
+      border: 1px solid var(--border-color);
+    }
+    
+    .post-content th {
+      background-color: #f5f5f5;
+      font-weight: bold;
+    }
+    
+    .dark .post-content th {
+      background-color: #333;
+    }
+    
+    .post-content ul.contains-task-list {
+      list-style: none;
+      margin-left: 0;
+    }
+    
+    .post-content ul.contains-task-list li.task-list-item {
+      margin-bottom: 5px;
+      display: flex;
+      align-items: center;
+    }
+    
+    .post-content ul.contains-task-list li.task-list-item input.task-list-item-checkbox {
+      margin-right: 8px;
+      flex-shrink: 0;
+    }
+    
+    .post-content ul.contains-task-list li.task-list-item label.task-list-item-label {
+      flex-grow: 1;
     }
     
     #sidebar {
@@ -362,38 +415,40 @@
 </header>
 
   <main id="main">
-    <div class="category">
-      <h1 class="category-title">文章分类</h1>
-      
-      <div class="category-info">
-        <p>共 <strong>2</strong> 个分类</p>
+    <div class="content-wrap">
+      <div class="category">
+        <h1 class="category-title">文章分类</h1>
+        
+        <div class="category-info">
+          <p>共 <strong>2</strong> 个分类</p>
+        </div>
+        
+        
+          <ul class="category-list">
+            
+              <li class="category-item">
+                <h2 class="category-item-title"><a href="/categories/%E6%8A%80%E6%9C%AF/">技术</a></h2>
+                <p class="category-item-count">共 1 篇文章</p>
+                <ul class="category-posts">
+                  
+                    <li class="category-post"><a href="/2026/04/08/hello-world/">Hello World</a></li>
+                  
+                </ul>
+              </li>
+            
+              <li class="category-item">
+                <h2 class="category-item-title"><a href="/categories/%E6%B5%8B%E8%AF%95/">测试</a></h2>
+                <p class="category-item-count">共 1 篇文章</p>
+                <ul class="category-posts">
+                  
+                    <li class="category-post"><a href="/2026/04/08/test-post/">Test Post</a></li>
+                  
+                </ul>
+              </li>
+            
+          </ul>
+        
       </div>
-      
-      
-        <ul class="category-list">
-          
-            <li class="category-item">
-              <h2 class="category-item-title"><a href="/categories/%E6%B5%8B%E8%AF%95/">测试</a></h2>
-              <p class="category-item-count">共 1 篇文章</p>
-              <ul class="category-posts">
-                
-                  <li class="category-post"><a href="/2026/04/08/test-post/">Test Post</a></li>
-                
-              </ul>
-            </li>
-          
-            <li class="category-item">
-              <h2 class="category-item-title"><a href="/categories/%E6%8A%80%E6%9C%AF/">技术</a></h2>
-              <p class="category-item-count">共 1 篇文章</p>
-              <ul class="category-posts">
-                
-                  <li class="category-post"><a href="/2026/04/08/hello-world/">Hello World</a></li>
-                
-              </ul>
-            </li>
-          
-        </ul>
-      
     </div>
   </main>
 
