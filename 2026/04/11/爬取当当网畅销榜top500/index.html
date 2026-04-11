@@ -433,24 +433,206 @@
           <article class="post">
             <div class="post-content">
               <h1>爬取当当网畅销榜top500</h1>
-<h2 id="项目背景">项目背景</h2>
+<h2 id="1-项目背景与目标">1. 项目背景与目标</h2>
+<h3 id="1-1-背景">1.1 背景</h3>
 <p>在信息爆炸的时代，获取图书市场的畅销信息对于出版社、作者和读者都具有重要价值。当当网作为国内知名的图书电商平台，其图书畅销榜数据具有较高的参考价值。</p>
-<h2 id="技术栈">技术栈</h2>
+<h3 id="1-2-目标">1.2 目标</h3>
 <ul>
-<li>Python 3.x</li>
-<li>requests</li>
-<li>re (正则表达式)</li>
-<li>json</li>
-<li>time</li>
+<li>开发一个自动化爬虫，爬取当当网图书畅销榜的完整数据</li>
+<li>实现对1-25页数据的批量爬取，共500条图书信息</li>
+<li>将爬取的数据以结构化格式保存，便于后续分析和使用</li>
+<li>确保爬虫的稳定性和可靠性，应对网站反爬机制</li>
 </ul>
-<h2 id="核心功能">核心功能</h2>
+<h2 id="2-技术栈选择">2. 技术栈选择</h2>
+<table>
+<thead>
+<tr>
+<th>技术/库</th>
+<th>版本</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Python</td>
+<td>3.x</td>
+<td>主要开发语言</td>
+</tr>
+<tr>
+<td>requests</td>
+<td>2.25.1+</td>
+<td>发起HTTP请求</td>
+</tr>
+<tr>
+<td>re</td>
+<td>内置库</td>
+<td>正则表达式解析HTML</td>
+</tr>
+<tr>
+<td>json</td>
+<td>内置库</td>
+<td>数据序列化与存储</td>
+</tr>
+<tr>
+<td>time</td>
+<td>内置库</td>
+<td>控制爬取频率，避免被封</td>
+</tr>
+</tbody>
+</table>
+<h2 id="3-爬虫架构设计">3. 爬虫架构设计</h2>
+<h3 id="3-1-整体架构">3.1 整体架构</h3>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">┌─────────────┐     ┌─────────────┐     ┌─────────────┐     ┌─────────────┐</span><br><span class="line">│  URL生成    │────&gt;│ HTTP请求    │────&gt;│ HTML解析    │────&gt;│ 数据存储    │</span><br><span class="line">└─────────────┘     └─────────────┘     └─────────────┘     └─────────────┘</span><br></pre></td></tr></table></figure>
+<h3 id="3-2-核心模块">3.2 核心模块</h3>
+<ol>
+<li><strong>URL生成模块</strong>：根据页码规则生成完整的URL</li>
+<li><strong>HTTP请求模块</strong>：模拟浏览器发送请求，处理异常情况</li>
+<li><strong>HTML解析模块</strong>：使用正则表达式提取图书信息</li>
+<li><strong>数据存储模块</strong>：将解析后的数据以JSON格式写入文件</li>
+</ol>
+<h2 id="4-核心功能实现">4. 核心功能实现</h2>
+<h3 id="4-1-HTTP请求处理">4.1 HTTP请求处理</h3>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">request_dandan</span>(<span class="params">url</span>):</span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        response = requests.get(url, headers=headers, timeout=<span class="number">15</span>)</span><br><span class="line">        <span class="comment"># 确保使用正确的编码</span></span><br><span class="line">        response.encoding = <span class="string">&#x27;gb2312&#x27;</span></span><br><span class="line">        <span class="keyword">if</span> response.status_code == <span class="number">200</span>:</span><br><span class="line">            <span class="comment"># 保存页面内容到文件，方便调试</span></span><br><span class="line">            <span class="keyword">if</span> <span class="string">&#x27;bestsellers&#x27;</span> <span class="keyword">in</span> url:</span><br><span class="line">                <span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">&#x27;bestsellers_page.html&#x27;</span>, <span class="string">&#x27;w&#x27;</span>, encoding=<span class="string">&#x27;UTF-8&#x27;</span>) <span class="keyword">as</span> f:</span><br><span class="line">                    f.write(response.text)</span><br><span class="line">            <span class="keyword">return</span> response.text</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">f&#x27;请求失败，状态码: <span class="subst">&#123;response.status_code&#125;</span>&#x27;</span>)</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">None</span></span><br><span class="line">    <span class="keyword">except</span> requests.RequestException <span class="keyword">as</span> e:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">f&#x27;请求异常: <span class="subst">&#123;e&#125;</span>&#x27;</span>)</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">None</span></span><br></pre></td></tr></table></figure>
+<h3 id="4-2-HTML解析">4.2 HTML解析</h3>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">parse_result</span>(<span class="params">html</span>):</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> html:</span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        <span class="comment"># 使用更准确的正则表达式模式，匹配畅销榜页面的HTML结构</span></span><br><span class="line">        pattern = re.<span class="built_in">compile</span>(</span><br><span class="line">            <span class="string">r&#x27;&lt;li&gt;.*?&lt;div class=&quot;list_num.*?&quot;&gt;(+).*?&lt;/div&gt;.*?&lt;img src=&quot;(.*?)&quot;.*?title=&quot;(.*?)&quot;.*?&lt;span class=&quot;tuijian&quot;&gt;(.*?)&lt;/span&gt;.*?&lt;div class=&quot;publisher_info&quot;&gt;(.*?)&lt;/div&gt;.*?&lt;span class=&quot;price_n&quot;&gt;(.*?)&lt;/span&gt;&#x27;</span>, re.S)</span><br><span class="line">        items = re.findall(pattern, html)</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">f&#x27;解析到 <span class="subst">&#123;<span class="built_in">len</span>(items)&#125;</span> 个项目&#x27;</span>)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> item <span class="keyword">in</span> items:</span><br><span class="line">            <span class="comment"># 清理数据，去除多余的HTML标签</span></span><br><span class="line">            recommend = re.sub(<span class="string">r&#x27;[^\d%]&#x27;</span>, <span class="string">&#x27;&#x27;</span>, item[<span class="number">3</span>])</span><br><span class="line">            author = re.sub(<span class="string">r&#x27;&lt;.*?&gt;&#x27;</span>, <span class="string">&#x27;&#x27;</span>, item[<span class="number">4</span>])</span><br><span class="line">            price = re.sub(<span class="string">r&#x27;[^\d.]&#x27;</span>, <span class="string">&#x27;&#x27;</span>, item[<span class="number">5</span>])</span><br><span class="line">            </span><br><span class="line">            <span class="comment"># 确保数据编码正确</span></span><br><span class="line">            <span class="keyword">yield</span> &#123;</span><br><span class="line">                <span class="string">&#x27;range&#x27;</span>: item[<span class="number">0</span>],</span><br><span class="line">                <span class="string">&#x27;image&#x27;</span>: item[<span class="number">1</span>],</span><br><span class="line">                <span class="string">&#x27;title&#x27;</span>: item[<span class="number">2</span>],</span><br><span class="line">                <span class="string">&#x27;recommend&#x27;</span>: recommend + <span class="string">&#x27;%推荐&#x27;</span>,</span><br><span class="line">                <span class="string">&#x27;author&#x27;</span>: author.strip(),</span><br><span class="line">                <span class="string">&#x27;times&#x27;</span>: <span class="string">&#x27;0次&#x27;</span>,  <span class="comment"># 畅销榜页面没有评分次数</span></span><br><span class="line">                <span class="string">&#x27;price&#x27;</span>: <span class="string">&#x27;¥&#x27;</span> + price</span><br><span class="line">            &#125;</span><br><span class="line">    <span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">f&#x27;解析异常: <span class="subst">&#123;e&#125;</span>&#x27;</span>)</span><br><span class="line">        <span class="keyword">return</span></span><br></pre></td></tr></table></figure>
+<h3 id="4-3-数据存储">4.3 数据存储</h3>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">write_item_to_file</span>(<span class="params">item, filename=<span class="string">&#x27;book.txt&#x27;</span></span>):</span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        <span class="keyword">with</span> <span class="built_in">open</span>(filename, <span class="string">&#x27;a&#x27;</span>, encoding=<span class="string">&#x27;UTF-8&#x27;</span>) <span class="keyword">as</span> f:</span><br><span class="line">            f.write(json.dumps(item, ensure_ascii=<span class="literal">False</span>) + <span class="string">&#x27;\n&#x27;</span>)</span><br><span class="line">    <span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">f&#x27;写入异常: <span class="subst">&#123;e&#125;</span>&#x27;</span>)</span><br></pre></td></tr></table></figure>
+<h3 id="4-4-主函数协调">4.4 主函数协调</h3>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">main</span>(<span class="params">url, filename=<span class="string">&#x27;book.txt&#x27;</span></span>):</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&#x27;正在爬取: <span class="subst">&#123;url&#125;</span>&#x27;</span>)</span><br><span class="line">    html = request_dandan(url)</span><br><span class="line">    items = parse_result(html)  <span class="comment"># 解析过滤我们想要的信息</span></span><br><span class="line">    <span class="keyword">if</span> items:</span><br><span class="line">        count = <span class="number">0</span></span><br><span class="line">        <span class="keyword">for</span> item <span class="keyword">in</span> items:</span><br><span class="line">            write_item_to_file(item, filename)</span><br><span class="line">            count += <span class="number">1</span></span><br><span class="line">        <span class="built_in">print</span>(<span class="string">f&#x27;爬取了 <span class="subst">&#123;count&#125;</span> 条数据&#x27;</span>)</span><br><span class="line">        <span class="keyword">return</span> count</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;没有爬取到数据&#x27;</span>)</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span></span><br></pre></td></tr></table></figure>
+<h2 id="5-代码优化过程">5. 代码优化过程</h2>
+<h3 id="5-1-初始问题">5.1 初始问题</h3>
 <ul>
-<li>爬取1-25页共500条图书数据</li>
-<li>数据以JSON格式存储</li>
-<li>支持异常处理和反爬机制</li>
+<li>正则表达式过于严格，无法匹配动态HTML结构</li>
+<li>编码处理不当，导致中文乱码</li>
+<li>缺少异常处理，爬虫稳定性差</li>
+<li>没有反爬机制应对策略</li>
 </ul>
-<h2 id="项目成果">项目成果</h2>
-<p>成功开发了当当网图书畅销榜爬虫，实现了完整的数据爬取和存储功能。</p>
+<h3 id="5-2-优化措施">5.2 优化措施</h3>
+<ol>
+<li><strong>正则表达式优化</strong>：使用更灵活的模式匹配，适应HTML结构变化</li>
+<li><strong>编码处理</strong>：明确设置response.encoding = 'gb2312'，确保中文正确显示</li>
+<li><strong>异常处理</strong>：添加try-except块，捕获请求和解析过程中的异常</li>
+<li><strong>反爬策略</strong>：添加请求头模拟浏览器，设置合理的爬取延迟</li>
+<li><strong>调试支持</strong>：保存页面内容到文件，方便分析HTML结构</li>
+</ol>
+<h2 id="6-完整源代码">6. 完整源代码</h2>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line"><span class="keyword">import</span> json</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"></span><br><span class="line"><span class="comment"># 添加请求头信息，模拟浏览器访问</span></span><br><span class="line">headers = &#123;</span><br><span class="line">    <span class="string">&#x27;User-Agent&#x27;</span>: <span class="string">&#x27;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;Accept&#x27;</span>: <span class="string">&#x27;text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;Accept-Language&#x27;</span>: <span class="string">&#x27;zh-CN,zh;q=0.9,en;q=0.8&#x27;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">request_dandan</span>(<span class="params">url</span>):</span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        response = requests.get(url, headers=headers, timeout=<span class="number">15</span>)</span><br><span class="line">        <span class="comment"># 确保使用正确的编码</span></span><br><span class="line">        response.encoding = <span class="string">&#x27;gb2312&#x27;</span></span><br><span class="line">        <span class="keyword">if</span> response.status_code == <span class="number">200</span>:</span><br><span class="line">            <span class="comment"># 保存页面内容到文件，方便调试</span></span><br><span class="line">            <span class="keyword">if</span> <span class="string">&#x27;bestsellers&#x27;</span> <span class="keyword">in</span> url:</span><br><span class="line">                <span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">&#x27;bestsellers_page.html&#x27;</span>, <span class="string">&#x27;w&#x27;</span>, encoding=<span class="string">&#x27;UTF-8&#x27;</span>) <span class="keyword">as</span> f:</span><br><span class="line">                    f.write(response.text)</span><br><span class="line">            <span class="keyword">return</span> response.text</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">f&#x27;请求失败，状态码: <span class="subst">&#123;response.status_code&#125;</span>&#x27;</span>)</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">None</span></span><br><span class="line">    <span class="keyword">except</span> requests.RequestException <span class="keyword">as</span> e:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">f&#x27;请求异常: <span class="subst">&#123;e&#125;</span>&#x27;</span>)</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">None</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">parse_result</span>(<span class="params">html</span>):</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> html:</span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        <span class="comment"># 使用更准确的正则表达式模式，匹配畅销榜页面的HTML结构</span></span><br><span class="line">        pattern = re.<span class="built_in">compile</span>(</span><br><span class="line">            <span class="string">r&#x27;&lt;li&gt;.*?&lt;div class=&quot;list_num.*?&quot;&gt;(+).*?&lt;/div&gt;.*?&lt;img src=&quot;(.*?)&quot;.*?title=&quot;(.*?)&quot;.*?&lt;span class=&quot;tuijian&quot;&gt;(.*?)&lt;/span&gt;.*?&lt;div class=&quot;publisher_info&quot;&gt;(.*?)&lt;/div&gt;.*?&lt;span class=&quot;price_n&quot;&gt;(.*?)&lt;/span&gt;&#x27;</span>, re.S)</span><br><span class="line">        items = re.findall(pattern, html)</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">f&#x27;解析到 <span class="subst">&#123;<span class="built_in">len</span>(items)&#125;</span> 个项目&#x27;</span>)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> item <span class="keyword">in</span> items:</span><br><span class="line">            <span class="comment"># 清理数据，去除多余的HTML标签</span></span><br><span class="line">            recommend = re.sub(<span class="string">r&#x27;[^\d%]&#x27;</span>, <span class="string">&#x27;&#x27;</span>, item[<span class="number">3</span>])</span><br><span class="line">            author = re.sub(<span class="string">r&#x27;&lt;.*?&gt;&#x27;</span>, <span class="string">&#x27;&#x27;</span>, item[<span class="number">4</span>])</span><br><span class="line">            price = re.sub(<span class="string">r&#x27;[^\d.]&#x27;</span>, <span class="string">&#x27;&#x27;</span>, item[<span class="number">5</span>])</span><br><span class="line">            </span><br><span class="line">            <span class="comment"># 确保数据编码正确</span></span><br><span class="line">            <span class="keyword">yield</span> &#123;</span><br><span class="line">                <span class="string">&#x27;range&#x27;</span>: item[<span class="number">0</span>],</span><br><span class="line">                <span class="string">&#x27;image&#x27;</span>: item[<span class="number">1</span>],</span><br><span class="line">                <span class="string">&#x27;title&#x27;</span>: item[<span class="number">2</span>],</span><br><span class="line">                <span class="string">&#x27;recommend&#x27;</span>: recommend + <span class="string">&#x27;%推荐&#x27;</span>,</span><br><span class="line">                <span class="string">&#x27;author&#x27;</span>: author.strip(),</span><br><span class="line">                <span class="string">&#x27;times&#x27;</span>: <span class="string">&#x27;0次&#x27;</span>,  <span class="comment"># 畅销榜页面没有评分次数</span></span><br><span class="line">                <span class="string">&#x27;price&#x27;</span>: <span class="string">&#x27;¥&#x27;</span> + price</span><br><span class="line">            &#125;</span><br><span class="line">    <span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">f&#x27;解析异常: <span class="subst">&#123;e&#125;</span>&#x27;</span>)</span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">write_item_to_file</span>(<span class="params">item, filename=<span class="string">&#x27;book.txt&#x27;</span></span>):</span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        <span class="keyword">with</span> <span class="built_in">open</span>(filename, <span class="string">&#x27;a&#x27;</span>, encoding=<span class="string">&#x27;UTF-8&#x27;</span>) <span class="keyword">as</span> f:</span><br><span class="line">            f.write(json.dumps(item, ensure_ascii=<span class="literal">False</span>) + <span class="string">&#x27;\n&#x27;</span>)</span><br><span class="line">    <span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">f&#x27;写入异常: <span class="subst">&#123;e&#125;</span>&#x27;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">main</span>(<span class="params">url, filename=<span class="string">&#x27;book.txt&#x27;</span></span>):</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&#x27;正在爬取: <span class="subst">&#123;url&#125;</span>&#x27;</span>)</span><br><span class="line">    html = request_dandan(url)</span><br><span class="line">    items = parse_result(html)  <span class="comment"># 解析过滤我们想要的信息</span></span><br><span class="line">    <span class="keyword">if</span> items:</span><br><span class="line">        count = <span class="number">0</span></span><br><span class="line">        <span class="keyword">for</span> item <span class="keyword">in</span> items:</span><br><span class="line">            write_item_to_file(item, filename)</span><br><span class="line">            count += <span class="number">1</span></span><br><span class="line">        <span class="built_in">print</span>(<span class="string">f&#x27;爬取了 <span class="subst">&#123;count&#125;</span> 条数据&#x27;</span>)</span><br><span class="line">        <span class="keyword">return</span> count</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;没有爬取到数据&#x27;</span>)</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    <span class="comment"># 爬取1-25页的所有信息并保存到top500.txt</span></span><br><span class="line">    base_url = <span class="string">&#x27;http://bang.dangdang.com/books/bestsellers/01.00.00.00.00.00-recent30-0-0-1-&#x27;</span> </span><br><span class="line">    <span class="comment"># 清空top500.txt文件</span></span><br><span class="line">    <span class="built_in">open</span>(<span class="string">&#x27;top500.txt&#x27;</span>, <span class="string">&#x27;w&#x27;</span>).close()</span><br><span class="line">    total = <span class="number">0</span></span><br><span class="line">    <span class="keyword">for</span> page <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, <span class="number">26</span>):</span><br><span class="line">        target_url = base_url + <span class="built_in">str</span>(page)</span><br><span class="line">        count = main(target_url, <span class="string">&#x27;top500.txt&#x27;</span>)</span><br><span class="line">        total += count</span><br><span class="line">        <span class="comment"># 添加延迟，避免被网站封禁</span></span><br><span class="line">        time.sleep(<span class="number">1</span>)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&#x27;总爬取了 <span class="subst">&#123;total&#125;</span> 条数据&#x27;</span>)</span><br></pre></td></tr></table></figure>
+<h2 id="7-爬取结果示例">7. 爬取结果示例</h2>
+<h3 id="前5条图书数据">前5条图书数据</h3>
+<ol>
+<li>
+<p><strong>排名</strong>: 1
+<strong>书名</strong>: 读读童谣和儿歌（一至四册） 升级版 一年级下册 人民教育出版社
+<strong>作者</strong>: 人民教育出版社
+<strong>推荐率</strong>: 100%推荐
+<strong>价格</strong>: ¥27.80</p>
+</li>
+<li>
+<p><strong>排名</strong>: 2
+<strong>书名</strong>: 脑筋急转弯999问 6-12岁儿童益智动脑游戏书 越玩越聪明
+<strong>作者</strong>: 崔钟雷
+<strong>推荐率</strong>: 100%推荐
+<strong>价格</strong>: ¥19.90</p>
+</li>
+<li>
+<p><strong>排名</strong>: 3
+<strong>书名</strong>: 静候葡萄成熟时  汪曾祺散文精选
+<strong>作者</strong>: 汪曾祺 著  时代华语 出品
+<strong>推荐率</strong>: 100%推荐
+<strong>价格</strong>: ¥29.80</p>
+</li>
+<li>
+<p><strong>排名</strong>: 4
+<strong>书名</strong>: 看世界 阅山河+游中国 访名校
+<strong>作者</strong>: 藏梦工作室编，拾字文化绘
+<strong>推荐率</strong>: 100%推荐
+<strong>价格</strong>: ¥59.60</p>
+</li>
+<li>
+<p><strong>排名</strong>: 5
+<strong>书名</strong>: 被讨厌的勇气
+<strong>作者</strong>: 岸见一郎, 古贺史健
+<strong>推荐率</strong>: 100%推荐
+<strong>价格</strong>: ¥29.80</p>
+</li>
+</ol>
+<h2 id="8-总结与展望">8. 总结与展望</h2>
+<h3 id="8-1-项目成果">8.1 项目成果</h3>
+<ul>
+<li>成功开发了当当网图书畅销榜爬虫</li>
+<li>实现了1-25页共500条图书数据的爬取</li>
+<li>数据以JSON格式存储，结构清晰，便于后续分析</li>
+<li>代码具有良好的异常处理和稳定性</li>
+</ul>
+<h3 id="8-2-技术亮点">8.2 技术亮点</h3>
+<ul>
+<li>灵活的正则表达式匹配，适应HTML结构变化</li>
+<li>完善的异常处理机制，提高爬虫稳定性</li>
+<li>合理的反爬策略，避免被网站封禁</li>
+<li>模块化设计，代码结构清晰，易于维护</li>
+</ul>
+<h3 id="8-3-后续优化方向">8.3 后续优化方向</h3>
+<ol>
+<li><strong>增加数据可视化</strong>：将爬取的数据进行可视化分析，生成图表</li>
+<li><strong>添加数据库存储</strong>：使用MongoDB或MySQL存储数据，方便查询和管理</li>
+<li><strong>实现定时爬取</strong>：设置定时任务，定期更新数据</li>
+<li><strong>增加代理IP池</strong>：应对更严格的反爬机制</li>
+<li><strong>扩展爬取范围</strong>：不仅限于畅销榜，可扩展到其他分类和榜单</li>
+</ol>
+<h3 id="8-4-应用价值">8.4 应用价值</h3>
+<ul>
+<li>为出版社提供市场趋势分析数据</li>
+<li>为作者提供图书市场参考</li>
+<li>为读者推荐热门图书</li>
+<li>为图书电商平台提供竞品分析数据</li>
+</ul>
+<h2 id="9-附：数据字段说明">9. 附：数据字段说明</h2>
+<table>
+<thead>
+<tr>
+<th>字段名</th>
+<th>含义</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>range</td>
+<td>排名</td>
+<td>1</td>
+</tr>
+<tr>
+<td>image</td>
+<td>封面图片URL</td>
+<td><a target="_blank" rel="noopener" href="http://img3m9.ddimg.cn/41/32/29839829-1_l_1774163323.jpg">http://img3m9.ddimg.cn/41/32/29839829-1_l_1774163323.jpg</a></td>
+</tr>
+<tr>
+<td>title</td>
+<td>书名</td>
+<td>读读童谣和儿歌（一至四册） 升级版 一年级下册 人民教育出版社</td>
+</tr>
+<tr>
+<td>recommend</td>
+<td>推荐率</td>
+<td>100%推荐</td>
+</tr>
+<tr>
+<td>author</td>
+<td>作者</td>
+<td>人民教育出版社</td>
+</tr>
+<tr>
+<td>times</td>
+<td>评分次数</td>
+<td>0次（畅销榜页面无此数据）</td>
+</tr>
+<tr>
+<td>price</td>
+<td>价格</td>
+<td>¥27.80</td>
+</tr>
+</tbody>
+</table>
 
             </div>
           </article>
