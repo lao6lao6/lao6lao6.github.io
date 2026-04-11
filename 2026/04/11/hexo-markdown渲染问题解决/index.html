@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>爬取当当网畅销榜top500 - 个人博客</title>
+  <title>Hexo Markdown渲染问题解决过程 - 个人博客</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.css" integrity="sha384-vKruj+a13U8yHIkAyGgK1J3ArTLzrFGBbBc0tDp4ad/EyewESeXE/Iv67Aj8gKZ0" crossorigin="anonymous">
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.js" integrity="sha384-PwRUT/YqbnEjkZO0zZxNqcxACrXe+j766U2amXcgMg5457rve2Y7I6ZJSm2A0mS4" crossorigin="anonymous"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05czjhAUe+/A0F3uVLCz0" crossorigin="anonymous" onload="renderMathInElement(document.body, {delimiters: [{left: '$', right: '$', display: false}, {left: '$$', right: '$$', display: true}, {left: '\\[', right: '\\]', display: true}, {left: '\\(', right: '\\)', display: false}], throwOnError: false, trust: true});"></script>
@@ -432,25 +432,86 @@
         <div id="content">
           <article class="post">
             <div class="post-content">
-              <h1>爬取当当网畅销榜top500</h1>
-<h2 id="项目背景">项目背景</h2>
-<p>在信息爆炸的时代，获取图书市场的畅销信息对于出版社、作者和读者都具有重要价值。当当网作为国内知名的图书电商平台，其图书畅销榜数据具有较高的参考价值。</p>
-<h2 id="技术栈">技术栈</h2>
+              <h1>Hexo Markdown渲染问题解决过程</h1>
+<h2 id="问题描述">问题描述</h2>
+<p>在使用Hexo静态博客框架时，添加新的Markdown文件后，执行 <code>npx hexo generate</code> 命令生成静态文件失败，出现以下错误：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">FATAL Something&#x27;s wrong. Maybe you can find the solution here: https://hexo.io/docs/troubleshooting.html</span><br><span class="line">TypeError: Cannot read properties of undefined (reading &#x27;length&#x27;)</span><br><span class="line">    at process_inlines (C:\Users\LENOVO\Downloads\Github\个人博客\node_modules\markdown-it\lib\rules_core\smartquotes.js:159:31)</span><br><span class="line">    at Array.smartquotes (C:\Users\LENOVO\Downloads\Github\个人博客\node_modules\markdown-it\lib\rules_core\smartquotes.js:199:5)</span><br><span class="line">    at Core.process (C:\Users\LENOVO\Downloads\Github\个人博客\node_modules\markdown-it\lib\parser_core.js:54:13)</span><br><span class="line">    at MarkdownIt.parse (C:\Users\LENOVO\Downloads\Github\个人博客\node_modules\markdown-it\lib\index.js:524:13)</span><br><span class="line">    at MarkdownIt.render (C:\Users\LENOVO\Downloads\Github\个人博客\node_modules\markdown-it\lib\index.js:544:36)</span><br><span class="line">    at Renderer.render (C:\Users\LENOVO\Downloads\Github\个人博客\node_modules\hexo-renderer-markdown-it\lib\renderer.js:79:24)</span><br><span class="line">    at Hexo.render (C:\Users\LENOVO\Downloads\Github\个人博客\node_modules\hexo-renderer-markdown-it\index.js:37:19)</span><br><span class="line">    at Hexo.tryCatcher (C:\Users\LENOVO\Downloads\Github\个人博客\node_modules\bluebird\js\release\util.js:16:23)</span><br><span class="line">    at Hexo.&lt;anonymous&gt; (C:\Users\LENOVO\Downloads\Github\个人博客\node_modules\bluebird\js\release\method.js:15:34)</span><br><span class="line">    at C:\Users\LENOVO\Downloads\Github\个人博客\node_modules\hexo\lib\hexo\render.js:81:22</span><br></pre></td></tr></table></figure>
+<h2 id="问题分析">问题分析</h2>
+<ol>
+<li>
+<p><strong>错误定位</strong>：错误发生在 <code>markdown-it</code> 库的 <code>smartquotes.js</code> 文件中，具体是在 <code>process_inlines</code> 函数的第159行，尝试访问一个未定义对象的 <code>length</code> 属性。</p>
+</li>
+<li>
+<p><strong>可能原因</strong>：</p>
 <ul>
-<li>Python 3.x</li>
-<li>requests</li>
-<li>re (正则表达式)</li>
-<li>json</li>
-<li>time</li>
+<li>Markdown文件中存在特殊字符或格式问题</li>
+<li><code>markdown-it</code> 渲染器的配置问题</li>
+<li>插件冲突或版本兼容性问题</li>
 </ul>
-<h2 id="核心功能">核心功能</h2>
+</li>
+<li>
+<p><strong>排查过程</strong>：</p>
 <ul>
-<li>爬取1-25页共500条图书数据</li>
-<li>数据以JSON格式存储</li>
-<li>支持异常处理和反爬机制</li>
+<li>尝试移除新添加的Markdown文件，发现生成成功，说明问题与新文件有关</li>
+<li>简化新文件内容，问题仍然存在，说明不是内容复杂度的问题</li>
+<li>检查文件编码，确保使用UTF-8编码</li>
+<li>尝试创建不同名称的文件，问题仍然存在</li>
+<li>检查 <code>_config.yml</code> 中的Markdown渲染器配置</li>
 </ul>
-<h2 id="项目成果">项目成果</h2>
-<p>成功开发了当当网图书畅销榜爬虫，实现了完整的数据爬取和存储功能。</p>
+</li>
+</ol>
+<h2 id="解决方案">解决方案</h2>
+<p>通过分析错误信息和排查过程，我发现问题出在 <code>markdown-it</code> 渲染器的 <code>typographer</code> 选项上。当启用此选项时，<code>markdown-it</code> 会尝试智能处理引号和其他排版元素，但在处理某些内容时会出现错误。</p>
+<h3 id="解决步骤">解决步骤</h3>
+<ol>
+<li>
+<p><strong>修改 <code>_config.yml</code> 文件</strong>：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 在markdown部分找到typographer选项并设置为false</span></span><br><span class="line"><span class="attr">markdown:</span></span><br><span class="line">  <span class="attr">render:</span></span><br><span class="line">    <span class="attr">html:</span> <span class="literal">true</span></span><br><span class="line">    <span class="attr">xhtmlOut:</span> <span class="literal">false</span></span><br><span class="line">    <span class="attr">breaks:</span> <span class="literal">false</span></span><br><span class="line">    <span class="attr">langPrefix:</span> <span class="string">&#x27;language-&#x27;</span></span><br><span class="line">    <span class="attr">linkify:</span> <span class="literal">true</span></span><br><span class="line">    <span class="attr">typographer:</span> <span class="literal">false</span>  <span class="comment"># 禁用typographer选项</span></span><br><span class="line">    <span class="attr">quotes:</span> <span class="string">&#x27;&quot;&quot;<span class="char escape_">&#x27;&#x27;</span><span class="char escape_">&#x27;&#x27;</span>&#x27;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p><strong>重新生成静态文件</strong>：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npx hexo generate</span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p><strong>部署到GitHub</strong>：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npx hexo deploy</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h2 id="技术原理">技术原理</h2>
+<p><code>typographer</code> 是 <code>markdown-it</code> 渲染器的一个选项，用于启用智能排版功能，包括：</p>
+<ul>
+<li>智能引号替换（将直引号转换为弯引号）</li>
+<li>破折号处理（将连字符转换为破折号）</li>
+<li>省略号处理</li>
+</ul>
+<p>当此选项启用时，<code>markdown-it</code> 会在渲染过程中调用 <code>smartquotes</code> 规则来处理这些排版元素。在某些情况下，特别是处理包含特殊字符或复杂格式的Markdown文件时，可能会出现未定义对象的访问错误。</p>
+<h2 id="解决方案评估">解决方案评估</h2>
+<h3 id="优点">优点</h3>
+<ul>
+<li><strong>简单有效</strong>：只需修改一个配置选项，不需要修改Markdown文件内容</li>
+<li><strong>兼容性好</strong>：禁用 <code>typographer</code> 选项不会影响其他Markdown功能</li>
+<li><strong>稳定可靠</strong>：避免了渲染过程中的潜在错误</li>
+</ul>
+<h3 id="缺点">缺点</h3>
+<ul>
+<li><strong>功能减少</strong>：失去了智能排版功能，如弯引号、破折号等自动处理</li>
+<li><strong>需要手动处理</strong>：对于需要特殊排版的内容，需要手动添加相应的HTML或Markdown语法</li>
+</ul>
+<h2 id="替代方案">替代方案</h2>
+<ol>
+<li><strong>升级 <code>markdown-it</code> 版本</strong>：检查是否有新版本的 <code>markdown-it</code> 修复了此问题</li>
+<li><strong>使用其他渲染器</strong>：考虑使用 <code>hexo-renderer-marked</code> 等其他Markdown渲染器</li>
+<li><strong>修复具体文件</strong>：针对特定的Markdown文件，检查并修复可能导致问题的内容</li>
+</ol>
+<h2 id="总结">总结</h2>
+<p>通过禁用 <code>markdown-it</code> 渲染器的 <code>typographer</code> 选项，成功解决了Hexo生成静态文件失败的问题。这个解决方案虽然会失去智能排版功能，但确保了渲染过程的稳定性和可靠性。</p>
+<p>在使用Hexo或其他静态站点生成器时，遇到渲染问题时，应该首先检查错误信息，定位问题根源，然后尝试调整渲染器配置或修复内容本身。对于复杂的Markdown文件，有时需要在功能和稳定性之间做出权衡。</p>
+<h2 id="参考资料">参考资料</h2>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://hexo.io/docs/">Hexo 文档</a></li>
+<li><a target="_blank" rel="noopener" href="https://markdown-it.github.io/">markdown-it 文档</a></li>
+<li><a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">Hexo 常见问题排查</a></li>
+</ul>
 
             </div>
           </article>
