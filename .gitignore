@@ -22,3 +22,6 @@ logs
 
 # Package manager files
 package-lock.json
+
+# Hexo database
+db.json
